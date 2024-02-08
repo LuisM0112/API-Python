@@ -1,21 +1,15 @@
+import sqlite3
+
 from statistics import variance
 from flask import Flask
 
 
 app = Flask(__name__)
 
-def Espanol():
-    español = "<p>Hola, Mundo!</p>"
-    return español
+con = sqlite3.connect("Homex.db")
 
-@app.route("/")
-def hello_world(): 
-   
-    return  Espanol()+"<p>Hello, World!</p>"
-   
+cur = con.cursor()
 
-@app.route("/returnList")
-def ReturnList():
-    resultado = "hola"
-    return "<p>"+resultado+"</p>"
-    
+res =  cur.execute("SELECT name FROM Producto")
+
+print(res)
