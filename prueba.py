@@ -1,7 +1,7 @@
 from flask import Flask
 import sqlite3
 
-nombreBD = "homeX.db"
+nombreBD = "HomeX.db"
 # sentenciaTabla = "CREATE TABLE empleado(name, job)"
 
 # Se conecta a la base de datos, si no existe la crea
