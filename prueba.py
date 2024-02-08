@@ -15,7 +15,8 @@ cursor = connection.cursor()
 
 #Crea la entidad para la base de datos
 # cursor.execute(sentenciaTabla)
-
+[]
+res = cursor.execute("SELECT name FROM Producto")
 app = Flask(__name__)
 
 
@@ -23,4 +24,4 @@ app = Flask(__name__)
 
 def hello_world():
 
-    return "<p>Hello, World!</p>"
+    return "res"
