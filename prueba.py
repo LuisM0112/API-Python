@@ -2,14 +2,25 @@ import sqlite3
 
 from statistics import variance
 from flask import Flask
+import sqlite3
 
+nombreBD = "homeX.db"
+# sentenciaTabla = "CREATE TABLE empleado(name, job)"
+
+# Se conecta a la base de datos, si no existe la crea
+connection = sqlite3.connect(nombreBD)
+
+# Crea un cursor para poder ejecutar sentencias SQLite
+cursor = connection.cursor()
+
+#Crea la entidad para la base de datos
+# cursor.execute(sentenciaTabla)
 
 app = Flask(__name__)
 
-con = sqlite3.connect("Homex.db")
 
-cur = con.cursor()
+@app.route("/")
 
-res =  cur.execute("SELECT name FROM Producto")
+def hello_world():
 
-print(res)
+    return "<p>Hello, World!</p>"

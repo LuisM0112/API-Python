@@ -1,0 +1,31 @@
+BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS "Producto" (
+	"id"	INTEGER,
+	"name"	TEXT NOT NULL UNIQUE,
+	"description"	TEXT NOT NULL,
+	"stock"	INTEGER NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "Furgoneta" (
+	"id"	INTEGER,
+	"matricula"	TEXT NOT NULL UNIQUE,
+	"marca"	TEXT NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "Pedido" (
+	"id"	INTEGER,
+	"date"	TEXT NOT NULL,
+	"address"	TEXT NOT NULL,
+	"idFurgoneta"	INTEGER,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	FOREIGN KEY("idFurgoneta") REFERENCES "Producto"
+);
+CREATE TABLE IF NOT EXISTS "ProductoEnPedido" (
+	"id"	INTEGER,
+	"idPedido"	INTEGER,
+	"idProducto"	INTEGER,
+	"cantidad"	INTEGER NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	FOREIGN KEY("idPedido") REFERENCES "Pedido"("id")
+);
+COMMIT;
