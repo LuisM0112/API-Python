@@ -1,5 +1,5 @@
 from flask import request
-from prueba import app, ejecutarConsulta
+from main import app, ejecutarConsulta
 
 @app.route('/Pedidos', methods=['GET'])
 def GetListaPedidos():
