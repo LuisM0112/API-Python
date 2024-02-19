@@ -1,10 +1,32 @@
-from flask import Flask, request
+import json
 import sqlite3
 
-# Nombre de la Base de datos
-nombreBD = "HomeX.db"
-
+from flask import Flask, request
 app = Flask(__name__)
+
+with open('config.json', 'r') as config_json:
+    config = json.load(config_json)
+
+# Nombre de la Base de datos
+nombreBD = config["DataBase"]
+
+def conectarBD():
+    return sqlite3.connect(nombreBD)
+
+def ejecutarConsulta(consulta):
+    connection = conectarBD()
+    cursor = connection.cursor()
+    
+    try:
+        cursor.execute(consulta)
+        print(consulta)
+
+        resultados = cursor.fetchall()
+        connection.commit()
+        return resultados
+    finally:
+        connection.close()
+
 
 @app.route('/')
 def hello_world():
@@ -27,187 +49,4 @@ def GetFurgonetaByMatricula(matricula):
     connection.close()
     return resultado
 
-# Devuelve una lista de Pedidos
-@app.route('/Pedidos', methods=['GET'])
-def GetListaPedidos():
-    connection = sqlite3.connect(nombreBD)
-    cursor = connection.cursor()
-    resultado = cursor.execute('SELECT * FROM Pedido').fetchall()
-    connection.close()
-    return resultado
-
-# Devuelve una lista de Pedidos en cierta fecha
-@app.route('/Pedidos/<string:fecha>', methods=['GET'])
-def GetListaPedidosEnFecha(fecha):
-    connection = sqlite3.connect(nombreBD)
-    cursor = connection.cursor()
-    resultado = cursor.execute(f'SELECT * FROM Pedido WHERE Pedido.date = \'{fecha}\'').fetchall()
-    connection.close()
-    return resultado
-
-@app.route('/Pedido/<int:idPedido>', methods=['GET'])
-def GetPedidoById(idPedido):
-    connection = sqlite3.connect(nombreBD)
-    cursor = connection.cursor()
-    resultado = cursor.execute(f'SELECT * FROM Pedido WHERE Pedido.id = \'{idPedido}\'').fetchall()
-    connection.close()
-    return resultado
-
-@app.route('/Pedido', methods=['POST'])
-def PostPedido():
-    respuesta = ''
-    try:
-        connection = sqlite3.connect(nombreBD)
-        cursor = connection.cursor()
-
-        date = request.form['date']
-        address = request.form['address']
-        idFurgoneta = request.form['idFurgoneta']
-
-        cursor.execute(f'INSERT INTO Pedido (date, address, idFUrgoneta) VALUES (\'{date}\', \'{address}\', \'{idFurgoneta}\')')
-
-        connection.commit()
-        connection.close()
-        respuesta = 'Pedido creado correctamente'
-    except Exception as error:
-        respuesta = f'Error al crear el pedido: {str(error)}'
-    finally:
-        return respuesta
-
-@app.route('/Pedido/<int:idPedido>', methods=['PUT'])
-def PutPedido(idPedido):
-    respuesta = ''
-    try:
-        connection = sqlite3.connect(nombreBD)
-        cursor = connection.cursor()
-
-        newDate = request.form.get('date')
-        newAddress = request.form.get('address')
-        newIdFurgoneta = request.form.get('idFurgoneta')
-
-        cursor.execute(f"SELECT date, address, idFurgoneta FROM Pedido WHERE id = \'{idPedido}\'")
-        currentValues = cursor.fetchone()
-        if currentValues:
-            currentDate, currentAddress, currentIdFurgoneta = currentValues
-        else:
-            raise ValueError("Pedido no encontrado")
-
-        if newDate:
-            currentDate = newDate
-        if newAddress:
-            currentAddress = newAddress
-        if newIdFurgoneta:
-            currentIdFurgoneta = newIdFurgoneta
-
-        cursor.execute(f"UPDATE Pedido SET date = \'{currentDate}\', address = \'{currentAddress}\', idFurgoneta = \'{currentIdFurgoneta}\' WHERE id = \'{idPedido}\'")
-
-        connection.commit()
-        connection.close()
-        respuesta = 'Pedido modificado correctamente'
-    except Exception as error:
-        respuesta = f'Error al modificar el pedido: {str(error)}'
-    finally:
-        return respuesta
-
-@app.route('/ProductoEnPedido/<int:idPedido>', methods=['POST'])
-def PostProductoEnPedido(idPedido):
-    respuesta = ''
-    try:
-        connection = sqlite3.connect(nombreBD)
-        cursor = connection.cursor()
-
-        idProducto = request.form.get('idProducto')
-        cantidad = request.form.get('Cantidad')
-
-        cursor.execute(f"SELECT * FROM Pedido WHERE id = \'{idPedido}\'")
-        pedido = cursor.fetchone()
-        if not pedido:
-            raise ValueError("Pedido no encontrado")
-        elif not idProducto:
-            raise ValueError("Producto no encontrado")
-        elif not cantidad or int(cantidad) < 1:
-            raise ValueError("Cantidad no válida")
-        else:
-            cursor.execute(f"INSERT INTO ProductoEnPedido (idPedido, idProducto, cantidad) VALUES (\'{idPedido}\', \'{idProducto}\', \'{cantidad}\'")
-
-        connection.commit()
-        connection.close()
-        respuesta = 'Producto añadido al pedido correctamente'
-    except Exception as error:
-        respuesta = f'Error al añadir producto al pedido: {str(error)}'
-    finally:
-        return respuesta
-
-@app.route('/ProductoEnPedido/<int:idPedido>', methods=['DELETE'])
-def DeleteProductoEnPedido(idPedido):
-    respuesta = ''
-    try:
-        connection = sqlite3.connect(nombreBD)
-        cursor = connection.cursor()
-        idProducto = request.form.get('idProducto')
-
-        cursor.execute(f"SELECT * FROM Pedido WHERE id = \'{idPedido}\'")
-        pedido = cursor.fetchone()
-        if not pedido:
-            raise ValueError("Pedido no encontrado")
-        elif not idProducto:
-            raise ValueError("Producto no encontrado")
-        else:
-            cursor.execute(f"DELETE FROM ProductoEnPedido WHERE idPedido = \'{idPedido}\' AND idProducto = \'{idProducto}\'")
-
-        connection.commit()
-        connection.close()
-        respuesta = 'Producto eliminado correctamente del pedido'
-    except Exception as error:
-        respuesta = f'Error al eliminar el procuto del pedido: {str(error)}'
-    finally:
-        return respuesta
-
-@app.route('/ProductoEnPedido/<int:idPedido>', methods=['PUT'])
-def PutProductoEnPedido(idPedido):
-    respuesta = ''
-    try:
-        connection = sqlite3.connect(nombreBD)
-        cursor = connection.cursor()
-        idProducto = request.form.get('idProducto')
-        cantidad = request.form.get('Cantidad')
-
-        cursor.execute(f"SELECT * FROM Pedido WHERE id = \'{idPedido}\'")
-        pedido = cursor.fetchone()
-        if not pedido:
-            raise ValueError("Pedido no encontrado")
-        elif not idProducto:
-            raise ValueError("Producto no encontrado")
-        else:
-            cursor.execute(f"UPDATE ProductoEnPedido SET cantidad = \'{cantidad}\' WHERE idPedido = \'{idPedido}\' AND idProducto = \'{idProducto}\'")
-
-        connection.commit()
-        connection.close()
-        respuesta = 'Producto del pedido modificado correctamente'
-    except Exception as error:
-        respuesta = f'Error al modificar el procuto del pedido: {str(error)}'
-    finally:
-        return respuesta
-
-@app.route('/Pedido/<int:idPedido>', methods=['DELETE'])
-def DeletePedido(idPedido):
-    respuesta = ''
-    try:
-        connection = sqlite3.connect(nombreBD)
-        cursor = connection.cursor()
-
-        cursor.execute(f"SELECT * FROM Pedido WHERE id = \'{idPedido}\'")
-        pedido = cursor.fetchone()
-        if not pedido:
-            raise ValueError("Pedido no encontrado")
-        else:
-            cursor.execute(f"DELETE FROM ProductoEnPedido WHERE idPedido = \'{idPedido}\'")
-            cursor.execute(f"DELETE FROM Pedido WHERE id = \'{idPedido}\'")
-
-        connection.commit()
-        connection.close()
-        respuesta = 'Pedido eliminado correctamente'
-    except Exception as error:
-        respuesta = f'Error al eliminar el pedido: {str(error)}'
-    finally:
-        return respuesta
+from endpoints import Pedido, ProductoEnPedido
