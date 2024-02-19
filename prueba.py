@@ -211,3 +211,83 @@ def DeletePedido(idPedido):
         respuesta = f'Error al eliminar el pedido: {str(error)}'
     finally:
         return respuesta
+
+
+@app.route('/Furgoneta', methods=['POST'])
+def PostFurgoneta():
+    respuesta = ''
+    try:
+        connection = sqlite3.connect(nombreBD)
+        cursor = connection.cursor()
+
+        matricula = request.form['matricula']
+        marca = request.form['marca']
+        modelo = request.form['modelo']
+        idFurgoneta = request.form['idFurgoneta'] 
+
+        cursor.execute(f'INSERT INTO Furgoneta (matricula, marca, modelo, idFurgoneta) VALUES (\'{matricula}\', \'{marca}\', \'{modelo}\', \'{idFurgoneta}\')')
+
+        connection.commit()
+        connection.close()
+        respuesta = 'Furgoneta creada correctamente'
+    except Exception as error:
+        respuesta = f'Error al crear la furgoneta: {str(error)}'
+    finally:
+        return respuesta
+
+@app.route('/Furgoneta/<int:idFurgoneta>', methods=['PUT'])
+def PutFurgoneta(idFurgoneta):
+    respuesta = ''
+    try:
+        connection = sqlite3.connect(nombreBD)
+        cursor = connection.cursor()
+
+        nueva_marca = request.form.get('marca')
+        nuevo_modelo = request.form.get('modelo')
+        nueva_idFurgoneta = request.form.get('idFurgoneta')
+
+        cursor.execute(f"SELECT marca, modelo, idFurgoneta FROM Furgoneta WHERE idFurgoneta = \'{idFurgoneta}\'")
+        valores_actuales = cursor.fetchone()
+        if valores_actuales:
+            marca_actual, modelo_actual, idFurgoneta_actual = valores_actuales
+        else:
+            raise ValueError("Furgoneta no encontrada")
+
+        if nueva_marca:
+            marca_actual = nueva_marca
+        if nuevo_modelo:
+            modelo_actual = nuevo_modelo
+        if nueva_idFurgoneta:
+            idFurgoneta_actual = nueva_idFurgoneta
+
+        cursor.execute(f"UPDATE Furgoneta SET marca = \'{marca_actual}\', modelo = \'{modelo_actual}\', idFurgoneta = \'{idFurgoneta_actual}\' WHERE idFurgoneta = \'{idFurgoneta}\'")
+
+        connection.commit()
+        connection.close()
+        respuesta = 'Furgoneta modificada correctamente'
+    except Exception as error:
+        respuesta = f'Error al modificar la furgoneta: {str(error)}'
+    finally:
+        return respuesta
+
+@app.route('/Furgoneta/<int:idFurgoneta>', methods=['DELETE'])
+def DeleteFurgoneta(idFurgoneta):
+    respuesta = ''
+    try:
+        connection = sqlite3.connect(nombreBD)
+        cursor = connection.cursor()
+
+        cursor.execute(f"SELECT * FROM Furgoneta WHERE idFurgoneta = \'{idFurgoneta}\'")
+        furgoneta = cursor.fetchone()
+        if not furgoneta:
+            raise ValueError("Furgoneta no encontrada")
+        else:
+            cursor.execute(f"DELETE FROM Furgoneta WHERE idFurgoneta = \'{idFurgoneta}\'")
+
+        connection.commit()
+        connection.close()
+        respuesta = 'Furgoneta eliminada correctamente'
+    except Exception as error:
+        respuesta = f'Error al eliminar la furgoneta: {str(error)}'
+    finally:
+        return respuesta
