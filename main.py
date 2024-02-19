@@ -49,4 +49,4 @@ def GetFurgonetaByMatricula(matricula):
     connection.close()
     return resultado
 
-from endpoints import Pedido, ProductoEnPedido
+from endpoints import Furgoneta, Pedido, ProductoEnPedido
