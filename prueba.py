@@ -125,7 +125,7 @@ def PostProductoEnPedido(idPedido):
             raise ValueError("Pedido no encontrado")
         elif not idProducto:
             raise ValueError("Producto no encontrado")
-        elif not cantidad or cantidad < 1:
+        elif not cantidad or int(cantidad) < 1:
             raise ValueError("Cantidad no válida")
         else:
             cursor.execute(f"INSERT INTO ProductoEnPedido (idPedido, idProducto, cantidad) VALUES (\'{idPedido}\', \'{idProducto}\', \'{cantidad}\'")
