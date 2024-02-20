@@ -32,21 +32,4 @@ def ejecutarConsulta(consulta):
 def hello_world():
     return '<p>Hello, World!</p>'
 
-# Devuelve una lista de Furgonetas
-@app.route('/Furgonetas', methods=['GET'])
-def GetListaFurgonetas():
-    connection = sqlite3.connect(nombreBD)
-    cursor = connection.cursor()
-    resultado = cursor.execute('SELECT * FROM Furgoneta').fetchall()
-    connection.close()
-    return resultado
-
-@app.route('/Furgoneta/<string:matricula>', methods=['GET'])
-def GetFurgonetaByMatricula(matricula):
-    connection = sqlite3.connect(nombreBD)
-    cursor = connection.cursor()
-    resultado = cursor.execute(f'SELECT * FROM Furgoneta WHERE Furgoneta.matricula = \'{matricula}\'').fetchall()
-    connection.close()
-    return resultado
-
 from endpoints import Furgoneta, Pedido, ProductoEnPedido

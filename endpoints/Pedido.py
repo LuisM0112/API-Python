@@ -1,4 +1,4 @@
-from flask import request
+from flask import abort, request
 from main import app, ejecutarConsulta
 
 @app.route('/Pedidos', methods=['GET'])
@@ -33,7 +33,7 @@ def GetPedidoById(idPedido):
   except Exception as error:
     respuesta = f'Error al obtener la lista de pedidos: {str(error)}'
   finally:
-    return respuesta
+    return respuesta, 404
 
 @app.route('/Pedido', methods=['POST'])
 def PostPedido():
@@ -67,9 +67,9 @@ def PutPedido(idPedido):
     furgoneta = ejecutarConsulta(consulta)
 
     if not pedido:
-      raise ValueError("Pedido no encontrado")
+      raise abort(404, description="Pedido no encontrado")
     elif not furgoneta:
-      raise ValueError("Furgoneta no encontrada")
+      raise abort(404, description="Furgoneta no encontrada")
     else:
       currentDate, currentAddress, currentIdFurgoneta = pedido[0]
     
@@ -85,7 +85,7 @@ def PutPedido(idPedido):
 
     respuesta = 'Pedido modificado correctamente'
   except Exception as error:
-    respuesta = f'Error al modificar el pedido: {str(error)}'
+    respuesta = error
   finally:
     return respuesta
 
