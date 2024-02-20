@@ -18,9 +18,8 @@ def ejecutarConsulta(consulta):
     cursor = connection.cursor()
     
     try:
-        cursor.execute(consulta)
         print(consulta)
-
+        cursor.execute(consulta)
         resultados = cursor.fetchall()
         connection.commit()
         return resultados
@@ -32,4 +31,4 @@ def ejecutarConsulta(consulta):
 def hello_world():
     return '<p>Hello, World!</p>'
 
-from endpoints import Furgoneta, Pedido, ProductoEnPedido
+from endpoints import Producto, Furgoneta, Pedido, ProductoEnPedido

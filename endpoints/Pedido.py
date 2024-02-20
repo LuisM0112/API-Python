@@ -33,7 +33,7 @@ def GetPedidoById(idPedido):
   except Exception as error:
     respuesta = f'Error al obtener la lista de pedidos: {str(error)}'
   finally:
-    return respuesta, 404
+    return respuesta
 
 @app.route('/Pedido', methods=['POST'])
 def PostPedido():

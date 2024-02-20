@@ -31,7 +31,9 @@ def PostProductoEnPedido(idPedido):
 
     consulta = f"SELECT * FROM Producto WHERE id = \'{idProducto}\'"
     producto = ejecutarConsulta(consulta)
-    print(producto)
+
+    consulta = f"SELECT cantidad FROM ProductoEnPedido WHERE idPedido = \'{idPedido}\' AND idProducto = \'{idProducto}\'"
+    cantidadProductoEnPedido = ejecutarConsulta(consulta)
 
     if not pedido:
       raise ValueError("Pedido no encontrado")
@@ -39,6 +41,10 @@ def PostProductoEnPedido(idPedido):
       raise ValueError("Producto no encontrado")
     elif not cantidad or int(cantidad) < 1:
       raise ValueError("Cantidad no válida")
+    elif cantidadProductoEnPedido:
+      cantidadFinal = cantidadProductoEnPedido + int(cantidad)
+      consulta = f"UPDATE ProductoEnPedido SET cantidad = \'{cantidadFinal}\' WHERE idPedido = \'{idPedido}\' AND idProducto = \'{idProducto}\'"
+      pedido = ejecutarConsulta(consulta)
     else:
       consulta = f"INSERT INTO ProductoEnPedido (idPedido, idProducto, cantidad) VALUES (\'{idPedido}\', \'{idProducto}\', \'{cantidad}\')"
       ejecutarConsulta(consulta)
@@ -80,11 +86,17 @@ def DeleteProductoEnPedido(idPedido):
 
     consulta = f"SELECT * FROM Pedido WHERE id = \'{idPedido}\'"
     pedido = ejecutarConsulta(consulta)
+    consulta = f"SELECT id FROM Producto WHERE id = \'{idProducto}\'"
+    producto = ejecutarConsulta(consulta)
+    consulta = f"SELECT id FROM ProductoEnPedido WHERE idPedido = \'{idPedido}\' AND idProducto = \'{idProducto}\'"
+    productoEnPedido = ejecutarConsulta(consulta)
     
     if not pedido:
       raise ValueError("Pedido no encontrado")
-    elif not idProducto:
+    elif not producto:
       raise ValueError("Producto no encontrado")
+    elif not productoEnPedido:
+      raise ValueError("Producto no encontrado en el pedido")
     else:
       consulta = f"DELETE FROM ProductoEnPedido WHERE idPedido = \'{idPedido}\' AND idProducto = \'{idProducto}\'"
       ejecutarConsulta(consulta)
