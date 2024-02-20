@@ -36,13 +36,13 @@ Productos almacenados.
 
 **Obtener producto por Id:**
 
-[http://127.0.0.1:5000/Producto/1](http://127.0.0.1:5000/Producto/1)
+[http://localhost:5000/Producto/1](http://127.0.0.1:5000/Producto/1)
 
 ### Peticiones Post
 
 **Crear un producto, a través de su nombre, descripción y stock:**
 
-[http://127.0.0.1:5000/Producto](http://127.0.0.1:5000/Producto)
+[http://localhost:5000/Producto](http://127.0.0.1:5000/Producto)
 
 Formulario:
 
@@ -54,7 +54,7 @@ Formulario:
 
 **Modificar un producto, nombre, descripción y stock:**
 
-[http://127.0.0.1:5000/Producto](http://127.0.0.1:5000/Producto)
+[http://localhost:5000/Producto](http://127.0.0.1:5000/Producto)
 
 Formulario:
 
@@ -82,13 +82,13 @@ Furgonetas de la empresa.
 
 **Obtener furgoneta por matricula:**
 
-[http://127.0.0.1:5000/Furgoneta/1234ABC](http://127.0.0.1:5000/Furgoneta/1234ABC)
+[http://localhost:5000/Furgoneta/1234ABC](http://127.0.0.1:5000/Furgoneta/1234ABC)
 
 ### Peticiones Post
 
 **Crear una furgoneta, a través de su matricula y marca:**
 
-[http://127.0.0.1:5000/Furgoneta](http://127.0.0.1:5000/Furgoneta)
+[http://localhost:5000/Furgoneta](http://127.0.0.1:5000/Furgoneta)
 
 Formulario:
 
@@ -99,7 +99,7 @@ Formulario:
 
 **Modificar una furgoneta, marca y matricula:**
 
-[http://127.0.0.1:5000/Furgoneta](http://127.0.0.1:5000/Furgoneta)
+[http://localhost:5000/Furgoneta](http://127.0.0.1:5000/Furgoneta)
 
 Formulario:
 
@@ -130,13 +130,13 @@ Pedidos realizados.
 
 **Obtener pedido por Id:**
 
-[http://127.0.0.1:5000/Pedido/1](http://127.0.0.1:5000/Pedido/1)
+[http://localhost:5000/Pedido/1](http://127.0.0.1:5000/Pedido/1)
 
 ### Peticiones Post
 
 **Crear un pedido, a través de su dirección, fecha y idFurgoneta:**
 
-[http://127.0.0.1:5000/Pedido](http://127.0.0.1:5000/Pedido)
+[http://localhost:5000/Pedido](http://127.0.0.1:5000/Pedido)
 
 Formulario:
 
@@ -148,7 +148,7 @@ Formulario:
 
 **Modificar un pedido, direccion, fecha y idFurgoneta:**
 
-[http://127.0.0.1:5000/Pedido](http://127.0.0.1:5000/Pedido)
+[http://localhost:5000/Pedido](http://127.0.0.1:5000/Pedido)
 
 Formulario:
 
@@ -193,7 +193,7 @@ Si el producto ya está en el pedido añade la cantidad introducida.
 
 **Modificar un producto en un pedido, a través de la id del pedido, idProducto y cantidad:**
 
-[http://127.0.0.1:5000/Pedido](http://127.0.0.1:5000/Pedido)
+[http://localhost:5000/Pedido](http://127.0.0.1:5000/Pedido)
 
 Formulario:
 
